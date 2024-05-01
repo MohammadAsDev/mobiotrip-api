@@ -14,8 +14,9 @@ For Windows devices:
 ### [Django Rest Framework(DRF)](https://www.django-rest-framework.org/)
 the main liberary:
 > pip install djangorestframework
+
 to build convenient filtering system
-> pip install django-filter  # Filtering support
+> pip install django-filter
 
 ### [Simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/)
 > pip install djangorestframework-simplejwt
