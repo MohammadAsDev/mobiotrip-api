@@ -2,6 +2,7 @@ from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView,
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
+from django.db.models import QuerySet
 from django_filters.rest_framework import DjangoFilterBackend
 
 from vehicles_manager.models import Vehicle
@@ -10,6 +11,7 @@ from .permissions import IsVehicleOwnerOrStaff
 from .models import *
 from stations_manager.models import Station
 from stations_manager.serializers import StationModelSerializer
+
 
 # Create your views here.
 
@@ -71,6 +73,7 @@ class PublicVehiclesList(ListAPIView):
 class ListVehicleStations(ListAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = StationModelSerializer
+    queryset = QuerySet()
 
     def list(self, request, *args, **kwargs):
         lookup_url_kwarg = self.lookup_field
