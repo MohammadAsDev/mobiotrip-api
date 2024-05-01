@@ -8,6 +8,7 @@ For this reason, just install the following liberaries, and everything gonna be 
 ### [Django](https://www.djangoproject.com/)  (The main framework)
 For Linux devices:
 > python -m pip install Django==5.0.4
+
 For Windows devices:
 > py -m pip install Django==5.0.4
 
