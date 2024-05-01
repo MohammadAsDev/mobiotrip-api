@@ -1,0 +1,10 @@
+main_env/
+employees_manager/__pycache__/
+employees_manager/migrations/
+users_manager/__pycache__/
+users_manager/migrations/
+stations_manager/__pycache__/
+stations_manager/migrations/
+vehicles_manager/__pycache__/
+vehicles_manager/migrations/
+mobiotrip_main/__pycache__/
