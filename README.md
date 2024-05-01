@@ -11,15 +11,15 @@ For Linux devices:
 For Windows devices:
 > py -m pip install Django==5.0.4
 
-### [Django Rest Framework(DRF)] (https://www.django-rest-framework.org/)
+### [Django Rest Framework(DRF)](https://www.django-rest-framework.org/)
 the main liberary:
 > pip install djangorestframework
 to build convenient filtering system
 > pip install django-filter  # Filtering support
 
-### [Simple JWT] (https://django-rest-framework-simplejwt.readthedocs.io/en/latest/)
+### [Simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/)
 > pip install djangorestframework-simplejwt
 
-### [DRF-yasg] (https://github.com/axnsan12/drf-yasg/) 
+### [DRF-yasg](https://github.com/axnsan12/drf-yasg/) 
 This is a swagger-based liberary for DRF 
 > pip install -U drf-yasg
