@@ -22,9 +22,9 @@ from rest_framework.permissions import AllowAny
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="MobioTrip API",
       default_version='v1',
-      description="Test description",
+      description="The full documentation for MobioTrip API",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="contact@snippets.local"),
       license=openapi.License(name="BSD License"),
@@ -42,4 +42,5 @@ urlpatterns = [
     path('vehicles/' , include("vehicles_manager.urls")),
     path('employees/' , include("employees_manager.urls")),
     path('stations/' , include("stations_manager.urls")),
+    path('wallets/', include("wallet_app.urls")),
 ]

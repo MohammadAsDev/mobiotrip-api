@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'vehicles_manager.apps.VehiclesManagerConfig',
     'stations_manager.apps.StationsManagerConfig',
     'employees_manager.apps.EmployeesManagerConfig',
+    'wallet_app.apps.WalletAppConfig',
 ]
 
 MIDDLEWARE = [

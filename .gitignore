@@ -8,3 +8,5 @@ stations_manager/migrations/
 vehicles_manager/__pycache__/
 vehicles_manager/migrations/
 mobiotrip_main/__pycache__/
+wallet_app/migrations/
+wallet_app/__pycache__/
