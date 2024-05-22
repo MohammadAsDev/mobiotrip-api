@@ -29,6 +29,9 @@ to build convenient filtering system
 ### [Simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/)
 > pip install djangorestframework-simplejwt
 
+### [Django CORS](https://pypi.org/project/django-cors-headers/)
+> pip install django-cors-headers
+
 ### [DRF-yasg](https://github.com/axnsan12/drf-yasg/) 
 This is a swagger-based liberary for DRF 
 > pip install -U drf-yasg
