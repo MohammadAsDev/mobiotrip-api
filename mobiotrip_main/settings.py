@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-*ug_$-0&k0-f&)tni#y&trjs73c$l#tuz*!a7*n5mg3lh$-nly
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]   # Bad thing for production
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
     'users_manager.apps.UsersManagerConfig',
     'vehicles_manager.apps.VehiclesManagerConfig',
     'stations_manager.apps.StationsManagerConfig',
@@ -57,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware' ,
 ]
 
 ROOT_URLCONF = 'mobiotrip_main.urls'
@@ -121,6 +123,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 50,
 }
+
+# CORS settings
+# https://pypi.org/project/django-cors-headers/
+CORS_ALLOW_ALL_ORIGINS = True   # Bad for production
 
 # Simple-JWT settings
 # https://pypi.org/project/djangorestframework-simplejwt/
