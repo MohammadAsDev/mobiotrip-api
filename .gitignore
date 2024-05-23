@@ -10,3 +10,5 @@ vehicles_manager/migrations/
 mobiotrip_main/__pycache__/
 wallet_app/migrations/
 wallet_app/__pycache__/
+news_platform/__pycache__/
+news_platform/migrations/
