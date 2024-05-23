@@ -43,4 +43,5 @@ urlpatterns = [
     path('employees/' , include("employees_manager.urls")),
     path('stations/' , include("stations_manager.urls")),
     path('wallets/', include("wallet_app.urls")),
+    path('news/' , include("news_platform.urls")),
 ]

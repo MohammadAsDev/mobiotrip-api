@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'stations_manager.apps.StationsManagerConfig',
     'employees_manager.apps.EmployeesManagerConfig',
     'wallet_app.apps.WalletAppConfig',
+    'news_platform.apps.NewsPlatformConfig',
 ]
 
 MIDDLEWARE = [

@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import serializers
 
 from .models import UserGenders, UserTypes , User
@@ -169,8 +171,8 @@ class EmployeeUserSerializer(UserSerializer):
     
     def create(self, validated_data : dict) -> any: 
         username = validated_data.get("username" , "")
-        user_obj = User.objects.get(username = username)
-        if not user_obj:
+        user = User.objects.filter(username = username)
+        if not user:
             return User.objects.create_user(**validated_data)
         else:
             raise APIException("username is used before")
