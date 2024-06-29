@@ -6,7 +6,7 @@ from users_manager.models import User
 class VehicleGovernorates(models.TextChoices):
     HOMS = "Homs"
     DAMASCUS = "Damascus"
-    ALEEPO = "Aleepo"
+    ALEPPO = "Aleppo"
     TARTUS = "Tartus"
     LATAKIA = "Latakia"
 

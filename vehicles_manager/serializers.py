@@ -24,6 +24,8 @@ class VehicleModelSerializer(serializers.ModelSerializer):
 """
 class VehicleOnlySerializer(serializers.Serializer):
 
+    owner_id = serializers.IntegerField()
+    
     SEATS_NUMBER_CHOICES = [
         (2  , "Small" ),
         (5 , "Medium"  ),
@@ -33,7 +35,7 @@ class VehicleOnlySerializer(serializers.Serializer):
     VEHICLE_GOVERNORATE_CHOICES = [
         ("Homs", VehicleGovernorates.HOMS) , 
         ("Damascus" , VehicleGovernorates.DAMASCUS)  ,
-        ("Aleepo" , VehicleGovernorates.ALEEPO),
+        ("Aleppo" , VehicleGovernorates.ALEPPO),
         ("Tartus" , VehicleGovernorates.TARTUS), 
         ("Latakia" , VehicleGovernorates.LATAKIA)  
     ]
