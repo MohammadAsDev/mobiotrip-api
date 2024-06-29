@@ -44,4 +44,5 @@ urlpatterns = [
     path('stations/' , include("stations_manager.urls")),
     path('wallets/', include("wallet_app.urls")),
     path('news/' , include("news_platform.urls")),
+    path('trips/' , include("trips_manager.urls")),
 ]
