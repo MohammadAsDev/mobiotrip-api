@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 
 from .models import UserGenders, UserTypes , User
+from vehicles_manager.models import Vehicle
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.exceptions import APIException
@@ -55,6 +56,7 @@ class UserSerializer(serializers.Serializer):
         (UserTypes.PUBLISHER    , "Publisher"),
     )
 
+    id = serializers.IntegerField(allow_null=False, read_only=True)
     password = serializers.CharField(allow_null=False, allow_blank=False, min_length=8 , trim_whitespace=True, style={"input_type" : "password"})
     first_name = serializers.CharField(allow_null=False, allow_blank=False, trim_whitespace=True)
     last_name = serializers.CharField(allow_null=False, allow_blank=False, trim_whitespace=True)
@@ -183,7 +185,6 @@ class EmployeeUserSerializer(UserSerializer):
 """
 class DriverSerializer(NormalUserSerializer):
     user_type = None
- 
     def create(self, validated_data: dict) -> any:
         validated_data["user_type"] = UserTypes.DRIVER
         return super().create(validated_data)

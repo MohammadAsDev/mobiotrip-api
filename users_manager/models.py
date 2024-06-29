@@ -227,8 +227,8 @@ class User(AbstractUser):
 
     username = models.CharField(db_column="email_or_phone_number" , max_length= 100 , blank=False, unique=True)
 
-    first_name = models.CharField(name="first_name" , max_length=100, blank=True , null=True)
-    last_name = models.CharField(name="last_name" , max_length=100)
+    first_name = models.CharField(name="first_name" , max_length=100, blank=False , null=False)
+    last_name = models.CharField(name="last_name" , max_length=100 , blank=False)
     birth_date = models.DateField(name="birth_date" , blank=False, null=False)
     gender = models.CharField(name="gender", choices=UserGenders.choices , max_length=10)
     user_type = models.SmallIntegerField(name="user_type" , choices=UserTypes.choices , editable=False , db_index=True)

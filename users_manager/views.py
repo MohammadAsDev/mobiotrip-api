@@ -9,9 +9,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+import random
+
 from .models import Rider, Driver
 from .permissions import IsOwnerOrStaff
-from .serializers import UserLoginSerializer, RiderSerializer, DriverSerializer
+from .serializers import UserLoginSerializer, RiderSerializer, DriverSerializer, UserSerializer
 from vehicles_manager.serializers import DriverVehicleDbViewSerializer
 from vehicles_manager.models import DriverVehicleDbView
 
@@ -57,57 +59,62 @@ class CreateRiderView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 
-"""
-    Driver API View
-
-    @TODO This view need to be refactored (naive implementation)
-    also refactor the serializer of this view
-"""
 class DriversView(generics.ListAPIView):
-    serializer_class = DriverVehicleDbViewSerializer
-    queryset = DriverVehicleDbView.objects.all()
-    permission_classes = [IsAdminUser]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["username"]
-
-
-    def _reformat_response(self, response_data : list) -> dict:
-        formated_response = list()
-        for driver in response_data:
-            formated_response.append({
-                "first_name" : driver["first_name"], 
-                "last_name" : driver["last_name"],
-                "phone_number" : driver["username"],
-                "birth_date" : driver["birth_date"],
-                "gender" : driver["gender"],
-                "vehicle" : {
-                    "vehicle_number" : driver["vehicle_number"],
-                    "seats_number" : driver["seats_number"],
-                    "vehicle_color" : driver["vehicle_color"],
-                    "vehicle_governorate" : driver["vehicle_governorate"],
-                    "vehicle_type" : driver["vehicle_type"]
-                }
-            })        
-        return formated_response
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            formated_response = self._reformat_response(serializer.data)
-            return self.get_paginated_response(formated_response)
-
-        serializer = self.get_serializer(queryset, many=True)
-        
-        formated_response = self._reformat_response(serializer.data)
-        
-        return Response(formated_response)
-        
-        
-class RetrieveDriverView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DriverSerializer
     queryset = Driver.objects.all()
+    permission_classes = [IsAdminUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["username"]        
+
+class RetrieveDriverView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = DriverVehicleDbViewSerializer
+    queryset = DriverVehicleDbView.objects.all()
     permission_classes = [IsOwnerOrStaff]
+
+    def _reformat_response(self, response_data : list) -> dict:
+        formated_response = ({
+            "first_name" : response_data["first_name"], 
+            "last_name" : response_data["last_name"],
+            "phone_number" : response_data["username"],
+            "birth_date" : response_data["birth_date"],
+            "gender" : response_data["gender"],
+            "vehicle" : {
+                "vehicle_number" : response_data["vehicle_number"],
+                "vehicle_color" : response_data["vehicle_color"],
+                "vehicle_governorate" : response_data["vehicle_governorate"],
+                "vehicle_type" : response_data["vehicle_type"]
+            }
+        })        
+        return formated_response
+    
+    def destroy(self, request, *args, **kwargs):
+        view_instance = self.get_object()
+        driver_instance = Driver.objects.get(pk=view_instance.id)
+        self.perform_destroy(driver_instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(self._reformat_response(serializer.data))
+
+class AccountDetails(views.APIView):
+    def get(self, request, format=None):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+class UsersCountReport(views.APIView):
+
+    permission_classes = [IsAdminUser, ]    
+
+    def get(self, request , format=None):
+        report_data = []
+        person_types = ["Rider" , "Personal Driver" , "Public Driver" , "Publisher" , "Staff"]
+        for type in person_types:
+            type_count = random.randint(5 , 100) 
+            report_data.append({
+                "id" : type,
+                "label" : type.replace("_" , " ").capitalize(),
+                "value": type_count,
+            })
+        return Response({"type" : "report" , "title" : "users count report",  "data" : report_data})
