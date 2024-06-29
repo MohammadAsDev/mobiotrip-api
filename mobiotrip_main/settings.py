@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import redis
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,17 +50,19 @@ INSTALLED_APPS = [
     'employees_manager.apps.EmployeesManagerConfig',
     'wallet_app.apps.WalletAppConfig',
     'news_platform.apps.NewsPlatformConfig',
+    'trips_manager.apps.TripsManagerConfig',
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware' ,
+
 ]
 
 ROOT_URLCONF = 'mobiotrip_main.urls'
@@ -97,6 +100,26 @@ DATABASES = {
     }
 }
 
+# System Cache
+# https://redis.io/
+REDIS_SETTINGS = {
+    'HOST' : 'localhost' , 
+    'PORT' : '6379',
+}
+
+BUSY_DRIVERS_KEY_FORMAT = "cache:busy_drivers:{}"
+BUSY_RIDERS_KEY_FORMAT  = "cache:busy_riders:{}"
+
+RUNNING_TRIPS_KEY_FORMAT = "cache:running_trips:{}"
+ACTIVE_DRIVER_KEY_FORMAT = "cache:drivers:{}"
+TRACKING_KEY = "cache:tracker"
+
+SYSTEM_CACHE = redis.Redis(
+    host= REDIS_SETTINGS["HOST"] , 
+    port= REDIS_SETTINGS["PORT"], 
+    decode_responses=True
+)
+
 # DRF-YASG (Swagger/OpenAPI 2 generation tool)
 # https://github.com/axnsan12/drf-yasg/
 SWAGGER_SETTINGS = {
@@ -127,6 +150,27 @@ REST_FRAMEWORK = {
 
 # CORS settings
 # https://pypi.org/project/django-cors-headers/
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'ngrok-skip-browser-warning',
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+
+# Optionally, allow all headers
+CORS_ALLOW_ALL_HEADERS = True
+
+# Optionally, allow credentials (cookies, authorization headers)
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True   # Bad for production
 
 # Simple-JWT settings
