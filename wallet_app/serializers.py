@@ -24,6 +24,14 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = "__all__"
 
+class ListTransactionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = "__all__"
+    
+    receiver_wallet = WalletSerializer()
+    sender_wallet = WalletSerializer()
+
 
 PAYMENT_GATEWAYS = [
     (PaymentGatewayChoices.SYRIATEL_CASH , "Syriatel Cash"),
@@ -31,7 +39,7 @@ PAYMENT_GATEWAYS = [
 
 
 class WalletPaymentGatewaySerailizer(serializers.Serializer):
-    pin_code = serializers.CharField(max_length=4, min_length=4, allow_blank=True)
+    pin_code = serializers.CharField(max_length=4, min_length=4, allow_blank=False)
     syriatel_account = SyriatelCashAccountSerializer()
 
     def get_current_user_phone_number(self):

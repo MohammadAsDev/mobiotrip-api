@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import views
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.transaction import atomic
@@ -32,6 +33,17 @@ class WalletDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = WalletSerializer
     queryset = Wallet.objects.all()
     permission_classes = [IsOwnerOrStaff, ]
+
+class MyWalletView(APIView):
+
+    def get(self, request, format=None):
+        user_id = request.user.id
+        wallet= Wallet.objects.filter(owner=user_id)
+        if not wallet:
+            return Response({"details" : "you don't have a wallet"} , status=status.HTTP_404_NOT_FOUND)
+        wallet_data = WalletSerializer(wallet[0])
+        return Response(wallet_data.data)
+
 
 """
     Charge your wallet using provided gateways
@@ -145,3 +157,90 @@ class TransferMoney(APIView):
         
         return Response(transfer_money_serializer.errors , status=status.HTTP_400_BAD_REQUEST)
 
+
+class RetrieveUserWalletInfo(generics.RetrieveAPIView):
+    serializer_class = UserWalletViewSerializer
+    queryset = UserWalletView.objects.all()
+    permission_classes = [IsOwnerOrStaff]
+
+class TransactionsList(generics.ListAPIView):
+    permission_classes = [IsAdminUser, ]
+    serializer_class = ListTransactionsSerializer
+    queryset = Transaction.objects.all()
+
+    def _reformat_response(self, response_data):
+        reformated_response = []
+        for transaction in response_data:
+            reformated_response.append({
+                "id" : transaction["id"],
+                "amount": transaction["amount"],
+                "created_at": transaction["created_at"],
+                "sender_wallet_uuid" : transaction["sender_wallet"]["wallet_uuid"],
+                "receiver_wallet_uuid" : transaction["receiver_wallet"]["wallet_uuid"]
+            })
+
+        return reformated_response
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(self._reformat_response(serializer.data))
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class IncomeReport(views.APIView):
+    permission_classes = [IsAdminUser, ]
+    def get(self, request, format=None):
+        total_income = random.randint(100_000 , 10_000_000)
+        is_increased = False if random.randint(0 , 1) == 0 else True
+        profit_amount = random.random()
+        profits =  profit_amount if is_increased else -1 * profit_amount
+        return Response({
+            "total_income" : f"{total_income:,}",
+            "profits" : f"{profits:.2f}"
+        })       
+
+class TransactionsReport(views.APIView):
+    permission_classes = [IsAdminUser, ]
+    def get(self, request, format = None):
+        total_transactions = random.randint(5_000 , 100_000)
+        is_increased = False if random.randint(0 , 1) == 0 else True
+        increasing_amount = random.random()
+        increasing_rate =  increasing_amount if is_increased else -1 * increasing_amount
+        return Response({
+            "total_transactions" : f"{total_transactions:,}" , 
+            "transactions_rate" : f"{increasing_rate:.2f}"
+        })
+
+class EwalletsReport(views.APIView):
+    permission_classes = [IsAdminUser, ]
+    def get(self, request, format= None):
+        total_ewallets = random.randint(2_000, 10_000)
+        is_increased = False if random.randint(0 , 1) == 0 else True
+        increasing_amount = random.random()
+        increasing_rate =  increasing_amount if is_increased else -1 * increasing_amount
+        return Response({
+            "total_ewallets" : f"{total_ewallets:,}" , 
+            "ewallets_rate" : f"{increasing_rate:.2f}"
+        })
+
+class TripsIncomeReport(views.APIView):
+    permission_classes = [IsAdminUser, ]
+
+    def get(self, request, format=None):
+        report_data = []
+        months = ["Jan." , "Feb." , "Mar." , "Apr." , "May" , "Jun." , "Jul." , "Aug." , "Sept." , "Oct." , "Nov." , "Dec."]
+        for month in months:
+            monthly_report = {
+                "month" : month,
+                "public_income" : random.randint(5000 , 100_000),
+                "personal_income" : random.randint(10000 , 500_000)
+            }
+            report_data.append(monthly_report)
+
+        return Response({"type" : "report" , "title" : "trips income" , "data" : report_data})

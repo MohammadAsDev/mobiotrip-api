@@ -11,7 +11,7 @@ class Wallet(models.Model):
     owner = models.OneToOneField(to=User, name="owner", on_delete=models.CASCADE , blank=False)
     balance = models.FloatField(name="balance" , default=0.0)
     pin_code = models.CharField(name="pin_code" , blank=False , max_length=4)
-    wallet_uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    wallet_uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     created_at = models.DateTimeField(auto_now=True)
 
 class PaymentGatewayChoices(models.IntegerChoices):
@@ -84,5 +84,5 @@ class UserWalletView(models.Model):
     wallet_uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     balance = models.FloatField(name="balance")
     pin_code = models.CharField(name="pin_code" , blank=False , max_length=4)
-    created_at = models.DateTimeField(name="created_ats")
+    created_at = models.DateTimeField(name="created_at")
 

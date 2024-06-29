@@ -2,13 +2,14 @@ USE `mobiotrip`;
 
 CREATE OR REPLACE VIEW user_wallet_view AS (
     SELECT 
+        `wallet_app_wallet`.id,
         `owner_id`,
         `email_or_phone_number` AS `phone_number`,
         `password` , 
         `first_name`,
         `last_name`,
         `birth_date`,
-        `gender`
+        `gender`,
         `balance` , 
         `pin_code` , 
         `wallet_uuid`,
