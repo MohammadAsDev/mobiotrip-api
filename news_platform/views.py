@@ -35,9 +35,8 @@ class ListPostViews(generics.ListAPIView):
     queryset = Post.objects.all()
 
     def get_queryset(self):
-        if self.request.user.is_staff:
-            queryset = self.filter_queryset(self.get_queryset())
-        else:
+        queryset = self.queryset
+        if not self.request.user.is_staff:
             queryset = self.get_owned_posts(self.request.user)
 
         return queryset
