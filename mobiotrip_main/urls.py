@@ -19,6 +19,8 @@ from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
+from django.urls import include, path
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -45,4 +47,4 @@ urlpatterns = [
     path('wallets/', include("wallet_app.urls")),
     path('news/' , include("news_platform.urls")),
     path('trips/' , include("trips_manager.urls")),
-]
+] + debug_toolbar_urls()

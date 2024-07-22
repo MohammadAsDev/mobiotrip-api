@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import redis
+import kafka
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    "debug_toolbar",
     'users_manager.apps.UsersManagerConfig',
     'vehicles_manager.apps.VehiclesManagerConfig',
     'stations_manager.apps.StationsManagerConfig',
@@ -62,10 +64,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'mobiotrip_main.urls'
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 TEMPLATES = [
     {
@@ -118,6 +126,21 @@ SYSTEM_CACHE = redis.Redis(
     host= REDIS_SETTINGS["HOST"] , 
     port= REDIS_SETTINGS["PORT"], 
     decode_responses=True
+)
+
+# Main Kafka Producer
+# https://kafka.apache.org/
+PRODUCER_SETTINGS = {
+    'KAFKA_BOOTSTRAP_SERVERS' : 'localhost:9092' , 
+    'KAFKA_API_VERESION' : '0.1.0'
+}
+
+TRACKER_TOPIC = "tracking-v1-topic"
+TIMER_TOPIC = "timing-v1-topic"
+
+SYSTEM_PRODUCER = kafka.KafkaProducer(
+    bootstrap_servers = PRODUCER_SETTINGS['KAFKA_BOOTSTRAP_SERVERS'],
+    api_version = PRODUCER_SETTINGS['KAFKA_API_VERESION']
 )
 
 # DRF-YASG (Swagger/OpenAPI 2 generation tool)
