@@ -1,6 +1,6 @@
 # MobioTrip (Still Working on it 😊)
 
-## What is MobioTrip?
+## What is MobioTrip💙 ?
   In Simple Words, MobioTrip is a trip managment project, but it can be used for any movement operations.
   This project is distributed into different components where which one is responsible on a specific task.
   For now these components are still under testing, and in the next weeks it will published on my account.
@@ -9,11 +9,22 @@
 
 ## How does it work? 
   As i said above, This is the API of the system. The architecture design that have been used to build the system is:
-    **Event-Driven Micro-Service Architecture**
+    __Event-Driven Micro-Service Architecture__
+    
   i've used this architecture to give the system higher availability and scalability.
 
-  The event broker that i've been used is __Apache kafka__ , also the main system memory (shared between all
+  The event broker that i've been used is __Apache Kafka__ , also the main system memory (shared between all
   micro-services to store the system's current state) is __Redis__. 
+
+  The diagram bellow can show the components of the system:
+  
+  ![Deployment Diagram](https://drive.google.com/uc?export=view&id=1T86t3DGD1FGEqlM1JNXYAZTHAOyKMnKv)
+
+  This diagram shows how these components are working togather:
+  ![Deployment Diagram](https://drive.google.com/uc?export=view&id=1goUWl0tZd1nDiPD8VpYbd4ydHndo3Aae)
+
+  >__Note__: You may found the difference between these diagrams and the project's current state, these changes
+  are exist because i am still working on the project
 
 ## To build this repo:
 I don't like the `requirements.txt` file, because it may have many conflicts 😵.
