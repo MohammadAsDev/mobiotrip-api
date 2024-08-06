@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 import redis
 import kafka
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'wallet_app.apps.WalletAppConfig',
     'news_platform.apps.NewsPlatformConfig',
     'trips_manager.apps.TripsManagerConfig',
+    'road_recommendation_system.apps.RoadRecommendationSystemConfig',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 ROOT_URLCONF = 'mobiotrip_main.urls'
 
 INTERNAL_IPS = [

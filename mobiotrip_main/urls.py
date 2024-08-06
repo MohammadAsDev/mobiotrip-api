@@ -47,4 +47,5 @@ urlpatterns = [
     path('wallets/', include("wallet_app.urls")),
     path('news/' , include("news_platform.urls")),
     path('trips/' , include("trips_manager.urls")),
+    path('model/' , include("road_recommendation_system.urls")),
 ] + debug_toolbar_urls()

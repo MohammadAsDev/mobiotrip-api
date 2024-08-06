@@ -14,3 +14,5 @@ news_platform/__pycache__/
 news_platform/migrations/
 trips_manager/migrations/
 trips_manager/__pycache__/
+road_recommendation_system/__pycache__/
+road_recommendation_system/migrations/
