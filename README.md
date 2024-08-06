@@ -26,6 +26,20 @@
   >__Note__: You may found the difference between these diagrams and the project's current state, these changes
   are exist because i am still working on the project
 
+## Docker, Docker Everthing!
+  I know this project may use alot of tools, so to make everything simple and avoid all config hell, 
+  we should use docker, so i made a docker compose file that contains redis and kafka images
+  all you have to do is:
+  
+    docker-compose create
+
+  then:
+  
+    docker-compose start
+    
+  then everything will goes fine 😁
+
+
 ## To build this repo:
 I don't like the `requirements.txt` file, because it may have many conflicts 😵.
 For this reason, just install the following liberaries, and everything gonna be alright.
