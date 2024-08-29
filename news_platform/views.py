@@ -58,13 +58,12 @@ class PostDetailsView(generics.RetrieveDestroyAPIView):
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        tags_id = serializer.data.get("tags")
+        post_tags= serializer.data.get("tags")
         
-        tags_data = TagSerializer(PostTag.objects.filter(id__in=tags_id) , many =True).data
 
         response = {
             "post_title" : serializer.data.get("title"),
             "post_content" : serializer.data.get("content"), 
-            "tags" : tags_data
+            "tags" : post_tags
         }
         return Response(response)

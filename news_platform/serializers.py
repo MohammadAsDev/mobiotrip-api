@@ -9,7 +9,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(
-        child = serializers.IntegerField()
+        child = serializers.CharField(allow_blank=False, max_length=50, trim_whitespace=True)
     )
     
     class Meta:
@@ -17,12 +17,20 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['id' , 'title' , 'content' , 'tags']
 
     def validate_tags(self, value):
-        for tag_id in value:
+        tag_ids = []
+        for tag_name in value:
+            tag_name = tag_name.lower()
             try:
-                PostTag.objects.get(id=tag_id)
+                tag = PostTag.objects.get(tag_name=tag_name)
+                tag_ids.append(tag.id)
             except PostTag.DoesNotExist:
-                raise serializers.ValidationError(f"Tag with ID {tag_id} does not exist.")
-        return value
+                new_tag = PostTag()
+                new_tag.tag_name = tag_name
+                new_tag.description = "newly created tag"
+                new_tag.save()
+                tag_ids.append(new_tag.id)
+                # raise serializers.ValidationError(f"Tag with ID {tag_id} does not exist.")
+        return tag_ids
 
 
     def create(self, validated_data):
