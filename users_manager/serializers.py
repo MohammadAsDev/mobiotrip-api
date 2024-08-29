@@ -157,8 +157,8 @@ class EmployeeUserSerializer(UserSerializer):
     username = serializers.EmailField(max_length=100,  allow_blank=False , allow_null=False)
 
     def validate_email(self , email : str) -> any:
-        pattern = re.compile("[A-z0-9]+\@[a-z]+\.com")
-        if re.fullmatch(pattern=pattern,string=email) != None:
+        pattern = re.compile("[A-z0-9\.]+\@[a-z]+\.com")
+        if re.fullmatch(pattern,email) != None:
             return email
         raise serializers.ValidationError("Email is not valid")
     

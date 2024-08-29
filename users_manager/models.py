@@ -43,7 +43,7 @@ class UserManager(BaseUserManager):
         return False
 
     def _is_valid_email(self, email_addr : str) -> bool:
-        pattern = re.compile("[A-z0-9]+\@[a-z]+\.com")
+        pattern = re.compile("[A-z0-9\.]+\@[a-z]+\.com")
         return (re.fullmatch(pattern= pattern , string=email_addr) != None)
 
 

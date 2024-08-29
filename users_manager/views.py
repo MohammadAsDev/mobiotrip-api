@@ -9,13 +9,15 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from django.core.exceptions import ObjectDoesNotExist
+
 import random
 
 from .models import Rider, Driver
 from .permissions import IsOwnerOrStaff
 from .serializers import UserLoginSerializer, RiderSerializer, DriverSerializer, UserSerializer
 from vehicles_manager.serializers import DriverVehicleDbViewSerializer
-from vehicles_manager.models import DriverVehicleDbView
+from vehicles_manager.models import DriverVehicleDbView , Vehicle , SeatsNumber , VehicleGovernorates
 
 # Create your views here.
 
@@ -53,6 +55,22 @@ class RetrieveRiderView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RiderSerializer
     permission_classes = [IsOwnerOrStaff]
 
+    def update(self, request, *args, **kwargs):
+        rider_pk = kwargs["pk"]
+        try:
+            rider = Rider.objects.get(pk=rider_pk)
+        except ObjectDoesNotExist:
+            return Response({"details" : "rider is not exist"} , status=status.HTTP_404_NOT_FOUND)
+        rider.first_name = request.data.get("first_name" , rider.first_name)
+        rider.last_name = request.data.get("last_name" , rider.last_name)
+        rider.birth_date = request.data.get("birth_date" , rider.birth_date)
+        rider.gender = request.data.get("gender" , rider.gender)
+        rider.username = request.data.get("username" , rider.username)
+
+        rider.save()
+        
+        return Response(self.serializer_class(rider).data , status=status.HTTP_200_OK)
+
 class CreateRiderView(generics.CreateAPIView):
     queryset = Rider.objects.all()
     serializer_class = RiderSerializer
@@ -87,6 +105,60 @@ class RetrieveDriverView(generics.RetrieveUpdateDestroyAPIView):
         })        
         return formated_response
     
+    def update(self, request, *args, **kwargs):
+        driver_pk = kwargs["pk"]
+        try:
+            driver = Driver.objects.get(pk=driver_pk)
+        except ObjectDoesNotExist:
+            return Response({"details" : "driver does not exist"} , status=status.HTTP_404_NOT_FOUND)
+        
+        try:
+            vehicle = Vehicle.objects.get(owner=driver_pk)
+        except ObjectDoesNotExist:
+            return Response({"details" : "no vehicle is owned by this driver"} , status=status.HTTP_404_NOT_FOUND)
+        
+
+        personal_info = {
+            "username" : request.data.get("username" , driver.username),
+            "first_name" : request.data.get("first_name", driver.first_name),
+            "last_name" : request.data.get("last_name", driver.last_name),
+            "birth_date" : request.data.get("birth_date", driver.birth_date),
+            "gender" : request.data.get("gender", driver.gender)
+        }
+
+        vehicle_info = {
+            "vehicle_number" : request.data.get("vehicle_number", vehicle.vehicle_number),
+            "seats_number" : request.data.get("seats_number" , vehicle.seats_number),
+            "vehicle_color" : request.data.get("vehicle_color" , vehicle.vehicle_color),
+            "vehicle_governorate" : request.data.get("vehicle_governorate", vehicle.vehicle_governorate),
+            "vehicle_type" : request.data.get("vehicle_type" , vehicle.vehicle_type)
+        }
+
+        driver.username = personal_info["username"]
+        driver.first_name = personal_info["first_name"]
+        driver.last_name = personal_info["last_name"]
+        driver.birth_date = personal_info["birth_date"]
+        driver.gender = personal_info["gender"]
+
+
+        
+        vehicle.vehicle_number = vehicle_info["vehicle_number"]
+        if  vehicle_info["seats_number"] not in list(map(lambda choice: choice[0] , SeatsNumber.choices)):
+            return Response({"details" : "invalid seats number"} , status=status.HTTP_400_BAD_REQUEST)
+        vehicle.seats_number = vehicle_info["seats_number"]
+        vehicle.vehicle_color = vehicle_info["vehicle_color"]
+        if not vehicle_info["vehicle_governorate"] in  list(map(lambda choice : choice[0] , VehicleGovernorates.choices)):
+            return Response({"details" : "invalid vehicle governorate"} , status=status.HTTP_400_BAD_REQUEST)
+        vehicle.vehicle_governorate = vehicle_info["vehicle_governorate"]
+        vehicle.vehicle_type = vehicle_info["vehicle_type"]
+
+        driver.save()
+        vehicle.save()
+
+        return Response({"driver" : personal_info , "vehicle" : vehicle_info} , status=status.HTTP_200_OK)
+
+        
+
     def destroy(self, request, *args, **kwargs):
         view_instance = self.get_object()
         driver_instance = Driver.objects.get(pk=view_instance.id)
