@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from django.conf import settings
 
-from .models import Trip, TripStatusChoice , TripRateChoice
+from .models import Trip, TripStatusChoice , TripRateChoice, TripStageChoices
 from users_manager.serializers import RiderSerializer, DriverSerializer
 from users_manager.models import Rider, Driver
 
@@ -131,7 +131,7 @@ class StartTripSerializer(serializers.Serializer):
         if cache.exists(settings.RUNNING_TRIPS_KEY_FORMAT.format(trip_id)):
             return trip_id
 
-        return ValidationError("trip id is not exist in the system")
+        raise ValidationError("trip id is not exist in the system")
     
 
 class ReportTripSerializer(serializers.Serializer):
@@ -141,9 +141,13 @@ class ReportTripSerializer(serializers.Serializer):
     def validate_trip_id(self, trip_id):
         cache = settings.SYSTEM_CACHE
         if cache.exists(settings.RUNNING_TRIPS_KEY_FORMAT.format(trip_id)):
-            return trip_id
+            trip_status = int(cache.hget(settings.RUNNING_TRIPS_KEY_FORMAT.format(trip_id) , "status"))
+            if trip_status == TripStageChoices.STARTED.value:
+                return trip_id
+            
+            raise ValidationError("trip is not in starting stage")
 
-        return ValidationError("trip id is not exist in the system")
+        raise ValidationError("trip id is not exist in the system")
 
 class AskForTripSerializer(serializers.Serializer):
     driver_id = serializers.IntegerField()
@@ -155,7 +159,7 @@ class AskForTripSerializer(serializers.Serializer):
     end_ycoord = serializers.FloatField()
 
 
-    def validated_driver_id(self, driver_id):
+    def validate_driver_id(self, driver_id):
         if not settings.SYSTEM_CACHE.exists(settings.ACTIVE_DRIVER_KEY_FORMAT.format(driver_id)):
             raise ValidationError("selected driver is not active in the system")
         
@@ -186,11 +190,15 @@ class AskForTripSerializer(serializers.Serializer):
     
 class RateTripSerialier(serializers.Serializer):
     trip_rate   = serializers.ChoiceField(choices=TripRateChoice.choices)
-    trip_id     = serializers.UUIDField()
+    trip_id     = serializers.CharField()
 
     def validate_trip_id(self, trip_id):
+        trip_status = int(cache.hget(settings.RUNNING_TRIPS_KEY_FORMAT.format(trip_id) , "status")[0])
         cache = settings.SYSTEM_CACHE
-        if cache.exists(settings.RUNNING_TRIPS_KEY_FORMAT.format(trip_id)):
-            return trip_id
-
-        return ValidationError("trip id is not exist in the system")
+        if not cache.exists(settings.RUNNING_TRIPS_KEY_FORMAT.format(trip_id)):
+            raise ValidationError("trip id is not exist in the system")
+                
+        if trip_status == TripStatusChoice.DONE.value:
+            raise ValidationError("trip is not done yet!") 
+        
+        return trip_id

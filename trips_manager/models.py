@@ -1,11 +1,9 @@
 from django.db import models
 
 from users_manager.models import Rider, Driver
-from datetime import datetime
-
 # Create your models here.
 
-class TripStageChoices(models.IntegerChoices):
+class TripStageChoices(models.IntegerChoices):  # descripe all trip stages
     NEED_ACK    = 0
     ACKED       = 1
     STARTED     = 2
@@ -13,10 +11,10 @@ class TripStageChoices(models.IntegerChoices):
     DONE        = 4
     REPORTED    = 5
 
-class TripStatusChoice(models.IntegerChoices):
-    DONE        = 0
-    DELAYED     = 1
-    REPORTED    = 2
+class TripStatusChoice(models.IntegerChoices):  # descripe final trip stages
+    DONE        = TripStageChoices.DONE.value
+    DELAYED     = TripStageChoices.DELAYED.value
+    REPORTED    = TripStageChoices.REPORTED.value
 
 class TripRateChoice(models.IntegerChoices):
     BAD     = 0
@@ -38,5 +36,7 @@ class Trip(models.Model):
 
     status = models.IntegerField(choices=TripStatusChoice.choices)
     rate = models.IntegerField(choices=TripRateChoice.choices)
+
+    price = models.FloatField(name="price" , null=False , blank=False)
 
     created_at =models.DateTimeField(auto_now=True)

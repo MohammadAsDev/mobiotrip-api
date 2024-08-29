@@ -15,6 +15,7 @@ urlpatterns = [
     path('start/' , StartTripView.as_view(), name="start_trip"),
     path('cancel/' , CancelTripView.as_view(), name="cancel_trip"),
     path('report/', ReportTripView.as_view(), name="report_trip"),
+    path('rate/', RateTripView.as_view(), name="rate_trip"),
     path('statistics/trips/', YearlyTripCountStats.as_view(), name="trips_count"),
     path('statistics/trips/time/', YearlyTotalTripsTime.as_view(), name="trips_count"),
 ]

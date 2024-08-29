@@ -120,6 +120,8 @@ REDIS_SETTINGS = {
 
 BUSY_DRIVERS_KEY_FORMAT = "cache:busy_drivers:{}"
 BUSY_RIDERS_KEY_FORMAT  = "cache:busy_riders:{}"
+TRIP_STATUS_KEY = "cache:trip_status"
+TRIP_STAGES_KEY = "cache:trip_stages"
 
 RUNNING_TRIPS_KEY_FORMAT = "cache:running_trips:{}"
 ACTIVE_DRIVER_KEY_FORMAT = "cache:drivers:{}"
@@ -140,6 +142,7 @@ PRODUCER_SETTINGS = {
 
 TRACKER_TOPIC = "tracking-v1-topic"
 TIMER_TOPIC = "timing-v1-topic"
+STATE_MANAGER_TOPIC = "state_manager-v1-topic"
 
 SYSTEM_PRODUCER = kafka.KafkaProducer(
     bootstrap_servers = PRODUCER_SETTINGS['KAFKA_BOOTSTRAP_SERVERS'],
