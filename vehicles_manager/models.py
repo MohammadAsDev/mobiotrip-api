@@ -14,6 +14,11 @@ class VehicleTypes(models.IntegerChoices):
     PUBLIC = 0
     PERSONAL = 1
 
+class SeatsNumber(models.IntegerChoices):
+    SMALL  = 2
+    MEDUIM = 5
+    LARGE  = 8
+
 """
     This is the basic vehicle model
 """
@@ -36,7 +41,8 @@ class Vehicle(models.Model):
 
     seats_number = models.SmallIntegerField(
         name="seats_number",
-        blank=False
+        blank=False,
+        choices=SeatsNumber.choices
     )
 
     vehicle_color = models.CharField(

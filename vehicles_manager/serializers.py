@@ -24,8 +24,9 @@ class VehicleModelSerializer(serializers.ModelSerializer):
 """
 class VehicleOnlySerializer(serializers.Serializer):
 
-    owner_id = serializers.IntegerField()
-    
+    owner_id = serializers.IntegerField(read_only=True)
+
+
     SEATS_NUMBER_CHOICES = [
         (2  , "Small" ),
         (5 , "Medium"  ),
@@ -176,7 +177,7 @@ class PublicDriverVehicleSerializer(DriverVehicleSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        validated_data["vehicle"]["vehicle_type"] = VehicleTypes.PUBLIC
+        validated_data["vehicle"]["vehicle_type"] = VehicleTypes.PUBLIC.value
         return super().create(validated_data)
 
 """
@@ -190,7 +191,7 @@ class PersonalDriverVehicleSerializer(DriverVehicleSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        validated_data["vehicle"]["vehicle_type"] = VehicleTypes.PERSONAL
+        validated_data["vehicle"]["vehicle_type"] = VehicleTypes.PERSONAL.value
         return super().create(validated_data)
 
 """
