@@ -1,4 +1,4 @@
-# MobioTrip (Still Working on it 😊)
+# MobioTrip (1.0V)
 
 ## What is MobioTrip💙 ?
   In Simple Words, MobioTrip is a trip managment project, but it can be used for any movement operations.
@@ -44,6 +44,7 @@
 I don't like the `requirements.txt` file, because it may have many conflicts 😵.
 For this reason, just install the following liberaries, and everything gonna be alright.
 
+
 ## Install this project on your device:
 1. Build your own virtual environemnt `python3 -m venv (your_env)`
 2. Install the following tools 
@@ -59,7 +60,7 @@ For Windows devices:
 > pip install mysqlclient
 
 ### [Django Rest Framework(DRF)](https://www.django-rest-framework.org/)
-the main liberary:
+the main library:
 > pip install djangorestframework
 
 to build convenient filtering system
@@ -72,5 +73,17 @@ to build convenient filtering system
 > pip install django-cors-headers
 
 ### [DRF-yasg](https://github.com/axnsan12/drf-yasg/) 
-This is a swagger-based liberary for DRF 
+This is a swagger-based library for DRF 
 > pip install -U drf-yasg
+
+### [Redis](https://pypi.org/project/redis/)
+Python Redis library
+> pip install redis
+
+### [Kafka](https://kafka-python.readthedocs.io/en/master/)
+Python Kafka library
+> pip install kafka-python
+
+### [Sci-kit Learn](https://pypi.org/project/scikit-learn/)
+Sci-kit learn library (for building the model)
+> pip install scikit-learn
